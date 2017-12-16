@@ -6,8 +6,8 @@ module Sloc
 		COMMENT_IN_CODE_REGEX = /\w+.+(#.+)/
 		TOTAL_REGEX = /\n/
 		EMPTY_LINE_REGEX = /^\s*$/
+		METHOD_REGEX = /^([^#]+def)/
 		DEFAULT_TAB = 2
-
 
 		def initialize(code)
 			@result = {}
@@ -17,6 +17,7 @@ module Sloc
 		def process
 			@result[:total] = @code.scan(TOTAL_REGEX).count
 			@result[:empty_line] = @code.scan(EMPTY_LINE_REGEX).count
+			@result[:methods] = @code.scan(METHOD_REGEX).count
 
 			mixed_lines = @code.scan(COMMENT_IN_CODE_REGEX).count
 			comment_lines = @code.scan(COMMENT_REGEX).count
