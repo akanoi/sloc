@@ -3,6 +3,7 @@ class CodeAnalyzer
   NESTING_REGEX = /^(\s{2,})+/
   COMMENT_REGEX = /^\s+?(#.+)/ 
   COMMENT_IN_CODE_REGEX = /\w+.+(#.+)/
+  MULTICOMMENT_REGEX = /(=begin.+=end)/m
   TOTAL_REGEX = /\n/
   EMPTY_LINE_REGEX = /^\s*$/
   METHOD_REGEX = /^([^#]*def)/
@@ -20,10 +21,11 @@ class CodeAnalyzer
 
     mixed_lines = @code.scan(COMMENT_IN_CODE_REGEX).count
     comment_lines = @code.scan(COMMENT_REGEX).count
-    @result[:comments] = mixed_lines + comment_lines
-    @result[:code] = @result[:total] - @result[:empty_line] - comment_lines
+    multicomment_lines = @code.scan(MULTICOMMENT_REGEX).count
+    @result[:comments] = mixed_lines + comment_lines + multicomment_lines
+    @result[:code] = @result[:total] - @result[:empty_line] - comment_lines - multicomment_lines
 
-    @result[:nesting] = calculated_nesting
+    #@result[:nesting] = calculated_nesting
 
     @result
   end
